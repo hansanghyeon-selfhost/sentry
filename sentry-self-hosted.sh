@@ -29,40 +29,19 @@ fi
 
 # 5.====================================== docker volume PK사용한 이름으로 변경
 
-# 5-1. create-docker-volumes.sh 파일의 특정 텍스트를 PK로 치환
-# 해당 스크립트 파일 경로로 이동
-TARGET_FILE="$PROJECT_FOLDER/install/create-docker-volumes.sh"
-if [ -f "$TARGET_FILE" ]; then
-    # 새로운 파일에 히어독으로 코드 추가
-    {
-        cat << 'EOF'
-# .env 파일에서 환경변수 불러오기
-ENV_FILE_PATH="../.env"
-if [ -f "$ENV_FILE_PATH" ]; then
-    export $(grep -v '^#' "$ENV_FILE_PATH" | xargs)
-else
-    echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
-    exit 1
-fi
-
-EOF
-        # 기존 내용 추가
-        cat "$TARGET_FILE"
-    } > "${TARGET_FILE}.tmp" && mv "${TARGET_FILE}.tmp" "$TARGET_FILE"
-
-    # '--name=sentry-'를 '--name=sentry-$PK-'로 치환
-    sed -i "s/--name=sentry-/--name=sentry-\$UNIQUE_KEY-/g" "$TARGET_FILE"
-else
-    echo "$TARGET_FILE 파일을 찾을 수 없습니다."
-fi
-
 # 5-2. PK로 변경한 볼륨체크하는 로직 모두 변경
+# create-docker-volumes.sh
 # upgrade-*.sh
 # - docker-postgres
 # - docker-kafka
 # - docker-clickhouse
 # upgrade는 모두다 내용이 많아서 따로 스크립트 파일을 가져오고 원본 스크립트파일은 `.bak` 확장자를 추가해서 남겨둔다.
 INSTALL_FOLDER="$PROJECT_FOLDER/install"
+
+# create-docker-volumes.sh
+mv "$INSTALL_FOLDER/create-docker-volumes.sh" "$INSTALL_FOLDER/create-docker-volumes.sh.bak"
+curl -o "$INSTALL_FOLDER/create-docker-volumes.sh" https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/create-docker-volumes.sh
+
 # clickhouse
 # 기존파일 백업
 mv "$INSTALL_FOLDER/upgrade-clickhouse.sh" "$INSTALL_FOLDER/upgrade-clickhouse.sh.bak"
