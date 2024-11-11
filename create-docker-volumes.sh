@@ -1,3 +1,5 @@
+echo "${_group}Creating volumes for persistent storage ..."
+
 # .env 파일에서 환경변수 불러오기
 ENV_FILE_PATH="../.env"
 if [ -f "$ENV_FILE_PATH" ]; then
@@ -6,8 +8,6 @@ else
     echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
     exit 1
 fi
-
-echo "${_group}Creating volumes for persistent storage ..."
 
 echo "Created $(docker volume create --name=sentry-$UNIQUE_KEY-clickhouse)."
 echo "Created $(docker volume create --name=sentry-$UNIQUE_KEY-data)."
