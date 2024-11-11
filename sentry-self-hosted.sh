@@ -66,16 +66,16 @@ INSTALL_FOLDER="$PROJECT_FOLDER/install"
 # clickhouse
 # 기존파일 백업
 mv "$INSTALL_FOLDER/upgrade-clickhouse.sh" "$INSTALL_FOLDER/upgrade-clickhouse.sh.bak"
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-clickhouse.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/upgrade-clickhouse.sh"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-clickhouse.sh > "$INSTALL_FOLDER/upgrade-clickhouse.sh"
 
 # postgres
 # 기존파일 백업
 mv "$INSTALL_FOLDER/upgrade-postgres.sh" "$INSTALL_FOLDER/upgrade-postgres.sh.bak"
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/upgrade-postgres.sh"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh > "$INSTALL_FOLDER/upgrade-postgres.sh"
 
 # kafra
 mv "$INSTALL_FOLDER/update-docker-volume-permissions.sh" "$INSTALL_FOLDER/update-docker-volume-permissions.sh.bak"
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permissions.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/update-docker-volume-permissions.sh"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permissions.sh > "$INSTALL_FOLDER/update-docker-volume-permissions.sh"
 
 # 5-2. docker-compose.yml 파일의 특정 텍스트 수정
 DOCKER_COMPOSE_FILE="$PROJECT_FOLDER/docker-compose.yml"
