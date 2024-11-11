@@ -1,23 +1,32 @@
+# .env 파일에서 환경변수 불러오기
+ENV_FILE_PATH="../.env"
+if [ -f "$ENV_FILE_PATH" ]; then
+    export $(grep -v '^#' "$ENV_FILE_PATH" | xargs)
+else
+    echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
+    exit 1
+fi
+
 echo "${_group}Ensuring proper PostgreSQL version ..."
 
-if [[ -n "$(docker volume ls -q --filter name=sentry-$$PROJECT_SLUG-postgres)" && "$(docker run --rm -v sentry-$$PROJECT_SLUG-postgres:/db busybox cat /db/PG_VERSION 2>/dev/null)" == "9.6" ]]; then
-  docker volume rm sentry-$$PROJECT_SLUG-postgres-new || true
+if [[ -n "$(docker volume ls -q --filter name=sentry-$UNIQUE_KEY-postgres)" && "$(docker run --rm -v sentry-$UNIQUE_KEY-postgres:/db busybox cat /db/PG_VERSION 2>/dev/null)" == "9.6" ]]; then
+  docker volume rm sentry-$UNIQUE_KEY-postgres-new || true
   # If this is Postgres 9.6 data, start upgrading it to 14.0 in a new volume
   docker run --rm \
-    -v sentry-$$PROJECT_SLUG-postgres:/var/lib/postgresql/9.6/data \
-    -v sentry-$$PROJECT_SLUG-postgres-new:/var/lib/postgresql/14/data \
+    -v sentry-$UNIQUE_KEY-postgres:/var/lib/postgresql/9.6/data \
+    -v sentry-$UNIQUE_KEY-postgres-new:/var/lib/postgresql/14/data \
     tianon/postgres-upgrade:9.6-to-14
 
   # Get rid of the old volume as we'll rename the new one to that
-  docker volume rm sentry-$$PROJECT_SLUG-postgres
-  docker volume create --name sentry-$$PROJECT_SLUG-postgres
+  docker volume rm sentry-$UNIQUE_KEY-postgres
+  docker volume create --name sentry-$UNIQUE_KEY-postgres
   # There's no rename volume in Docker so copy the contents from old to new name
   # Also append the `host all all all trust` line as `tianon/postgres-upgrade:9.6-to-14`
   # doesn't do that automatically.
-  docker run --rm -v sentry-$$PROJECT_SLUG-postgres-new:/from -v sentry-$$PROJECT_SLUG-postgres:/to alpine ash -c \
+  docker run --rm -v sentry-$UNIQUE_KEY-postgres-new:/from -v sentry-$UNIQUE_KEY-postgres:/to alpine ash -c \
     "cd /from ; cp -av . /to ; echo 'host all all all trust' >> /to/pg_hba.conf"
   # Finally, remove the new old volume as we are all in sentry-postgres now.
-  docker volume rm sentry-$$PROJECT_SLUG-postgres-new
+  docker volume rm sentry-$UNIQUE_KEY-postgres-new
   echo "Re-indexing due to glibc change, this may take a while..."
   echo "Starting up new PostgreSQL version"
   $dc up -d postgres
