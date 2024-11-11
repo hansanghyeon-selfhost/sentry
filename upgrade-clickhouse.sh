@@ -1,3 +1,5 @@
+echo "${_group}Upgrading Clickhouse ..."
+
 # .env 파일에서 환경변수 불러오기
 ENV_FILE_PATH="../.env"
 if [ -f "$ENV_FILE_PATH" ]; then
@@ -7,7 +9,6 @@ else
     exit 1
 fi
 
-echo "${_group}Upgrading Clickhouse ..."
 
 function wait_for_clickhouse() {
   # Wait for clickhouse
