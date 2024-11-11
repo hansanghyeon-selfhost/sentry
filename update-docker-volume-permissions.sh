@@ -1,3 +1,5 @@
+echo "${_group}Ensuring Kafka and Zookeeper volumes have correct permissions ..."
+
 # .env 파일에서 환경변수 불러오기
 ENV_FILE_PATH="../.env"
 if [ -f "$ENV_FILE_PATH" ]; then
@@ -6,8 +8,6 @@ else
     echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
     exit 1
 fi
-
-echo "${_group}Ensuring Kafka and Zookeeper volumes have correct permissions ..."
 
 # Only supporting platforms on linux x86 platforms and not apple silicon. I'm assuming that folks using apple silicon are doing it for dev purposes and it's difficult
 # to change permissions of docker volumes since it is run in a VM.
