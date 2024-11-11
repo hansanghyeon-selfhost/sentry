@@ -1,3 +1,5 @@
+echo "${_group}Ensuring proper PostgreSQL version ..."
+
 # .env 파일에서 환경변수 불러오기
 ENV_FILE_PATH="../.env"
 if [ -f "$ENV_FILE_PATH" ]; then
@@ -6,8 +8,6 @@ else
     echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
     exit 1
 fi
-
-echo "${_group}Ensuring proper PostgreSQL version ..."
 
 if [[ -n "$(docker volume ls -q --filter name=sentry-$UNIQUE_KEY-postgres)" && "$(docker run --rm -v sentry-$UNIQUE_KEY-postgres:/db busybox cat /db/PG_VERSION 2>/dev/null)" == "9.6" ]]; then
   docker volume rm sentry-$UNIQUE_KEY-postgres-new || true
