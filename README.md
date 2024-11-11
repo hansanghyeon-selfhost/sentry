@@ -1,3 +1,11 @@
+## TL;DR
+
+```
+sh -c "$(curl -sL https://api.github.com/repos/hansanghyeon-selfhost/sentry/sentry-self-hosted.sh | jq -r '.content' | base64 --decode)"
+```
+
+## docs
+
 https://github.com/getsentry/self-hosted
 
 해당 저장소의 document를 보면서 sentry self-host를 생성할때
