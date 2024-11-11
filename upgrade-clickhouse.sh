@@ -1,3 +1,12 @@
+# .env 파일에서 환경변수 불러오기
+ENV_FILE_PATH="../.env"
+if [ -f "$ENV_FILE_PATH" ]; then
+    export $(grep -v '^#' "$ENV_FILE_PATH" | xargs)
+else
+    echo "$ENV_FILE_PATH 파일을 찾을 수 없습니다."
+    exit 1
+fi
+
 echo "${_group}Upgrading Clickhouse ..."
 
 function wait_for_clickhouse() {
@@ -10,7 +19,7 @@ function wait_for_clickhouse() {
 }
 
 # First check to see if user is upgrading by checking for existing clickhouse volume
-if [[ -n "$(docker volume ls -q --filter name=sentry-$$PROJECT_SLUG-clickhouse)" ]]; then
+if [[ -n "$(docker volume ls -q --filter name=sentry-$UNIQUE_KEY-clickhouse)" ]]; then
   # Start clickhouse if it is not already running
   $dc up -d clickhouse
 
