@@ -1,7 +1,7 @@
 echo "${_group}Ensuring proper PostgreSQL version ..."
 
 # .env 파일에서 환경변수 불러오기
-ENV_FILE_PATH="../.env"
+ENV_FILE_PATH=".env"
 if [ -f "$ENV_FILE_PATH" ]; then
     export $(grep -v '^#' "$ENV_FILE_PATH" | xargs)
 else
