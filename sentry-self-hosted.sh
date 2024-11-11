@@ -12,9 +12,11 @@ export PK
 REPO_URL="https://github.com/getsentry/self-hosted.git"
 git clone "$REPO_URL" sentry-self-hosted-$PK
 
+# 프로젝트 파일이름 설정
+PROJECT_FOLDER="./sentry-self-hosted-$PK"
 
 # 4. .env 파일 업데이트
-ENV_FILE="./sentry-self-hosted-$PK/.env"
+ENV_FILE="$PROJECT_FOLDER/.env"
 if [ -f "$ENV_FILE" ]; then
     # COMPOSE_PROJECT_NAME과 UNIQUE_KEY 업데이트
     sed -i "s/^COMPOSE_PROJECT_NAME=sentry-self-hosted$/COMPOSE_PROJECT_NAME=sentry-self-hosted-${PK}/" "$ENV_FILE"
@@ -29,7 +31,7 @@ fi
 
 # 5-1. create-docker-volumes.sh 파일의 특정 텍스트를 PK로 치환
 # 해당 스크립트 파일 경로로 이동
-TARGET_FILE="./sentry-self-hosted-$PK/install/create-docker-volumes.sh"
+TARGET_FILE="$PROJECT_FOLDER/install/create-docker-volumes.sh"
 if [ -f "$TARGET_FILE" ]; then
     # 새로운 파일에 히어독으로 코드 추가
     {
@@ -60,16 +62,23 @@ fi
 # - docker-kafka
 # - docker-clickhouse
 # upgrade는 모두다 내용이 많아서 따로 스크립트 파일을 가져오고 원본 스크립트파일은 `.bak` 확장자를 추가해서 남겨둔다.
+INSTALL_FOLDER="$PROJECT_FOLDER/install"
+# clickhouse
+# 기존파일 백업
+mv "$INSTALL_FOLDER/upgrade-clickhouse.sh" "$INSTALL_FOLDER/upgrade-clickhouse.sh.bak"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-clickhouse.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/upgrade-clickhouse.sh"
 
 # postgres
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > upgrade-postgres.sh
-# clickhouse
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-clickhouse.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > upgrade-clickhouse.sh
+# 기존파일 백업
+mv "$INSTALL_FOLDER/upgrade-postgres.sh" "$INSTALL_FOLDER/upgrade-postgres.sh.bak"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/upgrade-postgres.sh"
+
 # kafra
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permission.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > update-docker-volume-permission.sh
+mv "$INSTALL_FOLDER/update-docker-volume-permission.sh" "$INSTALL_FOLDER/update-docker-volume-permission.sh.bak"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permission.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/update-docker-volume-permission.sh"
 
 # 5-2. docker-compose.yml 파일의 특정 텍스트 수정
-DOCKER_COMPOSE_FILE="./sentry-self-hosted-$PK/docker-compose.yml"
+DOCKER_COMPOSE_FILE="$PROJECT_FOLDER/docker-compose.yml"
 if [ -f "$DOCKER_COMPOSE_FILE" ]; then
     sed -i "s/  sentry-data:/  sentry-data:\n    name: sentry-\${UNIQUE_KEY}-data/" "$DOCKER_COMPOSE_FILE"
     sed -i "s/  sentry-postgres:/  sentry-postgres:\n    name: sentry-\${UNIQUE_KEY}-postgres/" "$DOCKER_COMPOSE_FILE"
