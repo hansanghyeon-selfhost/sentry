@@ -74,8 +74,8 @@ mv "$INSTALL_FOLDER/upgrade-postgres.sh" "$INSTALL_FOLDER/upgrade-postgres.sh.ba
 curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/upgrade-postgres.sh"
 
 # kafra
-mv "$INSTALL_FOLDER/update-docker-volume-permission.sh" "$INSTALL_FOLDER/update-docker-volume-permission.sh.bak"
-curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permission.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/update-docker-volume-permission.sh"
+mv "$INSTALL_FOLDER/update-docker-volume-permissions.sh" "$INSTALL_FOLDER/update-docker-volume-permissions.sh.bak"
+curl -O https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permissions.sh | sed "s/\\$\\$PROJECT_SLUG/$PK/g" > "$INSTALL_FOLDER/update-docker-volume-permissions.sh"
 
 # 5-2. docker-compose.yml 파일의 특정 텍스트 수정
 DOCKER_COMPOSE_FILE="$PROJECT_FOLDER/docker-compose.yml"
