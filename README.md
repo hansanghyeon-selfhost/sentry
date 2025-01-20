@@ -1,7 +1,7 @@
 ## TL;DR
 
 ```
-sh -c "$(curl -sL https://api.github.com/repos/hansanghyeon-selfhost/sentry/sentry-self-hosted.sh | jq -r '.content' | base64 --decode)"
+https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/sentry-self-hosted.sh | sudo sh
 ```
 
 ## docs

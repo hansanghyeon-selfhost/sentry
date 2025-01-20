@@ -52,10 +52,6 @@ curl -o "$INSTALL_FOLDER/upgrade-clickhouse.sh" https://raw.githubusercontent.co
 mv "$INSTALL_FOLDER/upgrade-postgres.sh" "$INSTALL_FOLDER/upgrade-postgres.sh.bak"
 curl -o "$INSTALL_FOLDER/upgrade-postgres.sh" https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/upgrade-postgres.sh
 
-# kafra
-mv "$INSTALL_FOLDER/update-docker-volume-permissions.sh" "$INSTALL_FOLDER/update-docker-volume-permissions.sh.bak"
-curl -o "$INSTALL_FOLDER/update-docker-volume-permissions.sh" https://raw.githubusercontent.com/hansanghyeon-selfhost/sentry/refs/heads/main/update-docker-volume-permissions.sh
-
 # 5-2. docker-compose.yml 파일의 특정 텍스트 수정
 DOCKER_COMPOSE_FILE="$PROJECT_FOLDER/docker-compose.yml"
 if [ -f "$DOCKER_COMPOSE_FILE" ]; then
